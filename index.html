@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lokaler Bewerbungs-Tracker</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>📋 Bewerbungs Tracker</h1>
+            <p>Weil ichs kann</p>
+        </header>
+
+        <form id="form" class="form">
+            <div class="form-group">
+                <label for="firma">Firmenname:</label>
+                <input type="text" id="firma" required>
+            </div>
+            <div class="form-group">
+                <label for="status">Status:</label>
+                <select id="status" required>
+                    <option value="ausstehend">⏳ Ausstehend</option>
+                    <option value="zugesagt">✅ Zugesagt</option>
+                    <option value="abgelehnt">❌ Abgelehnt</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="datum">Datum</label>
+                <input type="text" id="datum" placeholder="z.B. 05.03.2026" required>
+            </div>
+            <div class="form-group">
+                <label for="notiz">Notiz 2:</label>
+                <input type="text" id="notiz" placeholder="z.B. Vorstellungsgespräch">
+            </div>
+            <button type="submit">➕ Automatisch hinzufügen</button>
+            <button type="button" id="export">💾 JSON exportieren</button>
+        </form>
+
+        <main class="bereiche">
+            <div id="ausstehend" class="bereich ausstehend">
+                <h2>⏳ Ausstehend <span class="count">(0)</span></h2>
+                <ul></ul>
+            </div>
+            <div id="zugesagt" class="bereich zugesagt">
+                <h2>✅ Zugesagt <span class="count">(0)</span></h2>
+                <ul></ul>
+            </div>
+            <div id="abgelehnt" class="bereich abgelehnt">
+                <h2>❌ Abgelehnt <span class="count">(0)</span></h2>
+                <ul></ul>
+            </div>
+        </main>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
