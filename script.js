@@ -1,5 +1,15 @@
 let data = JSON.parse(localStorage.getItem('bewerbungen')) || [];
 
+if (data.length === 0) {
+  fetch('./bewerbungen.json')
+    .then(res => res.json())
+    .then(jsonData => {
+      data = jsonData;
+      saveData();
+    })
+    .catch(err => console.log('JSON optional', err));
+}
+
 function render() {
     // AUTO-LOAD JSON als Fallback
     if (data.length === 0) {
@@ -155,6 +165,7 @@ document.getElementById('export').addEventListener('click', () => {
 
 
 render();
+
 
 
 
