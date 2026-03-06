@@ -91,5 +91,13 @@ document.getElementById('export').addEventListener('click', () => {
     URL.revokeObjectURL(url);
 });
 
+fetch('./bewerbungen.json')
+  .then(res => res.json())
+  .then(data => {
+    localStorage.setItem('bewerbungen', JSON.stringify(data));
+    render();  // Deine Render-Funktion
+  })
+  .catch(err => console.error('JSON-Laden fehlgeschlagen:', err));
+
 render();
 
