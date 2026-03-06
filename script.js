@@ -67,6 +67,31 @@ function render() {
 
 document.getElementById('form').addEventListener('submit', (e) => {
     e.preventDefault();
+   
+    document.getElementById('import').addEventListener('click', () => {
+    document.getElementById('fileInput').click();
+    });
+
+    document.getElementById('fileInput').addEventListener('change', (e) => {
+    const file = e.target.files[0];
+    if (file) {
+        const reader = new FileReader();
+        reader.onload = (ev) => {
+            try {
+                const importedData = JSON.parse(ev.target.result);
+                if (Array.isArray(importedData)) {
+                    data = importedData;
+                    saveData();
+                    render();
+                    alert('✅ Importiert! ' + data.length + ' Firmen geladen.');
+                }
+            } catch (err) {
+                alert('❌ Fehler: Ungültige JSON-Datei');
+            }
+        };
+        reader.readAsText(file);
+    }
+});
     
     const firma = document.getElementById('firma').value.trim();
     const status = document.getElementById('status').value;
@@ -81,24 +106,43 @@ document.getElementById('form').addEventListener('submit', (e) => {
     }
 });
 
+document.getElementById('migrate').addEventListener('click', () => {
+    // Versucht lokale Daten zu lesen (file:// Kontext)
+    try {
+        // Trick: Window.name für Cross-Origin (funktioniert oft)
+        const localDataStr = localStorage.getItem('bewerbungen') || 
+                           sessionStorage.getItem('bewerbungen') ||
+                           window.name;
+        
+        if (localDataStr && localDataStr !== '[]') {
+            const localData = JSON.parse(localDataStr);
+            data = localData;
+            saveData();
+            render();
+            window.name = ''; // Cleanup
+            alert('✅ Migration erfolgreich! ' + data.length + ' Firmen übertragen.');
+        } else {
+            alert('❌ Keine lokalen Daten gefunden. Exportiere lokal zuerst!');
+        }
+    } catch (e) {
+        alert('❌ Migration fehlgeschlagen. Exportiere als JSON und importiere.');
+    }
+});
+
 document.getElementById('export').addEventListener('click', () => {
     const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = `bewerbungen-backup.json`;
+    a.download = `bewerbungen-${new Date().toLocaleDateString('de-DE')}.json`;
+    document.body.appendChild(a);
     a.click();
+    document.body.removeChild(a);
     URL.revokeObjectURL(url);
 });
 
-fetch('./bewerbungen-backup.json')
-  .then(res => res.json())
-  .then(data => {
-    localStorage.setItem('bewerbungen', JSON.stringify(data));
-    render();  // Deine Render-Funktion
-  })
-  .catch(err => console.error('JSON-Laden fehlgeschlagen:', err));
 
 render();
+
 
 
