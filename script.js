@@ -91,7 +91,7 @@ document.getElementById('export').addEventListener('click', () => {
     URL.revokeObjectURL(url);
 });
 
-fetch('./bewerbungen.json')
+fetch('./bewerbungen-backup.json')
   .then(res => res.json())
   .then(data => {
     localStorage.setItem('bewerbungen', JSON.stringify(data));
@@ -100,4 +100,5 @@ fetch('./bewerbungen.json')
   .catch(err => console.error('JSON-Laden fehlgeschlagen:', err));
 
 render();
+
 
