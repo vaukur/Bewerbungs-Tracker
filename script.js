@@ -50,7 +50,7 @@ function render() {
                 saveData();
                 localStorage.setItem('bewerbungen', JSON.stringify(data));
             })
-            .catch(err => console.log('JSON optional')};
+            .catch(err => console.log('JSON optional'))};
     }
 // Parst DD.MM.YYYY → Date (Fix für deutsches Format!)
 function parseGermanDate(dateStr) {
@@ -202,4 +202,5 @@ render();
 
 
 }
+
 
