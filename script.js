@@ -1,5 +1,17 @@
 let data = JSON.parse(localStorage.getItem('bewerbungen')) || [];
 
+function render() {
+    // AUTO-LOAD JSON als Fallback
+    if (data.length === 0) {
+        fetch('./bewerbungen.json')
+            .then(res => res.json())
+            .then(jsonData => {
+                data = jsonData;
+                saveData();
+                localStorage.setItem('bewerbungen', JSON.stringify(data));
+            })
+            .catch(err => console.log('JSON optional'));
+    }
 // Parst DD.MM.YYYY → Date (Fix für deutsches Format!)
 function parseGermanDate(dateStr) {
     if (!dateStr) return new Date('1900-01-01');
@@ -143,6 +155,7 @@ document.getElementById('export').addEventListener('click', () => {
 
 
 render();
+
 
 
 
