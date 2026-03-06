@@ -1,14 +1,44 @@
 let data = JSON.parse(localStorage.getItem('bewerbungen')) || [];
 
-if (data.length === 0) {
-  fetch('./bewerbungen.json')
-    .then(res => res.json())
-    .then(jsonData => {
-      data = jsonData;
-      saveData();
-    })
-    .catch(err => console.log('JSON optional', err));
+function loadData() {
+  // 1. localStorage laden
+  data = JSON.parse(localStorage.getItem('bewerbungen')) || [];
+  
+  // 2. Falls leer → JSON-Backup laden
+  if (data.length === 0) {
+    console.log('Lade JSON...');
+    fetch('./bewerbungen.json')
+      .then(response => {
+        if (!response.ok) {
+          throw new Error('JSON nicht gefunden: ' + response.status);
+        }
+        return response.json();
+      })
+      .then(jsonData => {
+        console.log('✅ JSON geladen:', jsonData.length, 'Firmen');
+        data = jsonData;
+        localStorage.setItem('bewerbungen', JSON.stringify(data));
+        render();  // ← Jetzt rendern!
+      })
+      .catch(error => {
+        console.warn('⚠️ JSON-Fehler:', error);
+        render();  // ← Auch bei Fehler rendern!
+      });
+  } else {
+    console.log('✅ localStorage:', data.length, 'Firmen');
+    render();
+  }
 }
+
+function saveData() {
+  localStorage.setItem('bewerbungen', JSON.stringify(data));
+}
+
+
+document.addEventListener('DOMContentLoaded', loadData);
+
+
+
 
 function render() {
     // AUTO-LOAD JSON als Fallback
@@ -165,6 +195,7 @@ document.getElementById('export').addEventListener('click', () => {
 
 
 render();
+
 
 
 
